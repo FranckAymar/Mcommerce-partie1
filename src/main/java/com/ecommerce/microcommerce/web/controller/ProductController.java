@@ -124,6 +124,17 @@ public class ProductController {
     }
 
 
+    //Tri par ordre alphabetique
+    @GetMapping("/trierProduits")
+    public List<Product> trierProduitsParOrdreAlphabetique(){
+        return productDao.findAllByOrderByNom() ;
+    }
+
+
+
+
+
+
 }
 
 

@@ -114,7 +114,7 @@ public class ProductController {
     public List calculerMargeProduit(){
 
 
-        List<Product> products = productDao.findAll() ;
+        List<Product> products =  productDao.findAll() ;
 
         for(Product product : products){
           this.productsAndMarge.add(product+ " :" + (product.getPrix() - product.getPrixAchat())) ;

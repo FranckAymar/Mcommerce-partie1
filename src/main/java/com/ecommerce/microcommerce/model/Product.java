@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 @Entity
 //@JsonFilter("monFiltreDynamique")
@@ -28,6 +29,7 @@ public class Product {
     //constructeur par défaut
     public Product() {
     }
+
 
     //constructeur pour nos tests
     public Product(int id, String nom, int prix, int prixAchat) {

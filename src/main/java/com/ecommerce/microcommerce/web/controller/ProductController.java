@@ -3,6 +3,8 @@ package com.ecommerce.microcommerce.web.controller;
 import com.ecommerce.microcommerce.dao.ProductDao;
 import com.ecommerce.microcommerce.model.Product;
 import com.ecommerce.microcommerce.web.exceptions.ProduitIntrouvableException;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
@@ -16,6 +18,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -27,12 +30,15 @@ public class ProductController {
     @Autowired
     private ProductDao productDao;
 
+    private List productsAndMarge = new ArrayList() ;
+
 
     //Récupérer la liste des produits
 
     @RequestMapping(value = "/Produits", method = RequestMethod.GET)
 
     public MappingJacksonValue listeProduits() {
+
 
         Iterable<Product> produits = productDao.findAll();
 
@@ -86,7 +92,7 @@ public class ProductController {
     @DeleteMapping (value = "/Produits/{id}")
     public void supprimerProduit(@PathVariable int id) {
 
-        productDao.delete(id);
+        productDao.deleteById(id);
     }
 
     @PutMapping (value = "/Produits")
@@ -103,6 +109,21 @@ public class ProductController {
         return productDao.chercherUnProduitCher(400);
     }
 
+    //Calculer la marge
+    @GetMapping(value = "/AdminProduits" )
+    public List calculerMargeProduit(){
+
+
+        List<Product> products = productDao.findAll() ;
+
+        for(Product product : products){
+          this.productsAndMarge.add(product+ " :" + (product.getPrix() - product.getPrixAchat())) ;
+
+        }
+        return productsAndMarge ;
+    }
 
 
 }
+
+

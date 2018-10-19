@@ -2,6 +2,7 @@ package com.ecommerce.microcommerce.web.controller;
 
 import com.ecommerce.microcommerce.dao.ProductDao;
 import com.ecommerce.microcommerce.model.Product;
+import com.ecommerce.microcommerce.web.exceptions.ProduitGratuitException;
 import com.ecommerce.microcommerce.web.exceptions.ProduitIntrouvableException;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -72,13 +73,18 @@ public class ProductController {
 
     //ajouter un produit
     @PostMapping(value = "/Produits")
-
     public ResponseEntity<Void> ajouterProduit(@Valid @RequestBody Product product) {
 
-        Product productAdded =  productDao.save(product);
+        if(product.getPrix() == 0){
+            throw   new ProduitGratuitException("Impossible de d'ajouter un produit avec un prix de vente non defini");
 
-        if (productAdded == null)
+        }else{
+
+            Product productAdded = productDao.save(product);
+
+            if (productAdded == null)
             return ResponseEntity.noContent().build();
+
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -87,6 +93,7 @@ public class ProductController {
                 .toUri();
 
         return ResponseEntity.created(location).build();
+        }
     }
 
     @DeleteMapping (value = "/Produits/{id}")
